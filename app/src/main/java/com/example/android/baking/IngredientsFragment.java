@@ -39,4 +39,9 @@ public class IngredientsFragment extends Fragment {
         return rootView;
 
     }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 }
