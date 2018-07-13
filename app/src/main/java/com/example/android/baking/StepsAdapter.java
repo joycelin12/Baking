@@ -2,6 +2,7 @@ package com.example.android.baking;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ import butterknife.ButterKnife;
  * Created by joycelin12 on 7/12/18.
  */
 
-public class StepsAdapter extends RecyclerView.Adapter <StepsAdapter.NumberViewHolder> {
+public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.NumberViewHolder> {
 
 
 
@@ -66,15 +67,17 @@ public class StepsAdapter extends RecyclerView.Adapter <StepsAdapter.NumberViewH
 
         public NumberViewHolder(View view) {
             super(view);
+            view.setOnClickListener(this);
             ButterKnife.bind(this, view);
 
-            view.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
+
             if (mClickListener != null) try {
-                mClickListener.onItemClick(v, getAdapterPosition());
+                 mClickListener.onItemClick(v, getAdapterPosition());
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -113,9 +116,13 @@ public class StepsAdapter extends RecyclerView.Adapter <StepsAdapter.NumberViewH
 
     void setClickListener(StepsAdapter.ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
+
     }
 
     public interface ItemClickListener{
+
         void onItemClick(View view, int position) throws JSONException;
+
+
     }
 }

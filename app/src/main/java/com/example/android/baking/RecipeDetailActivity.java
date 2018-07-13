@@ -4,6 +4,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+
+import org.json.JSONException;
 
 public class RecipeDetailActivity extends AppCompatActivity {
 
@@ -24,6 +27,10 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 .add(R.id.steps, stepsFragment)
                 .commit();
 
+        Log.i("tag", "recipe detail activity");
+
 
     }
+
+
 }

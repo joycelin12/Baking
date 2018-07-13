@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ public class StepsFragment extends Fragment implements StepsAdapter.ItemClickLis
     @BindView(R.id.recipe_steps_recyclerview) RecyclerView recipeStepsRecyclerView;
     private Unbinder unbinder;
 
+
     //Mandatory constructor for instantiating the fragment
     public StepsFragment() {
 
@@ -53,6 +55,7 @@ public class StepsFragment extends Fragment implements StepsAdapter.ItemClickLis
                 stepsData.add(new Steps("1","Starting prep.","1. Preheat the oven to 350\u00b0F. Grease the bottom of a 9-inch round springform pan with butter. ", "",  ""));
 
         StepsAdapter sAdapter = new StepsAdapter(2, stepsData, this.getContext());
+        sAdapter.setClickListener(this);
         recipeStepsRecyclerView.setAdapter(sAdapter);
 
 
