@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    tools:context="com.example.android.baking.RecipeDetailActivity">
+
+    <LinearLayout
+        android:id="@+id/left_linear_layout"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ingredients title"
+        android:paddingBottom="16dp"
+        />
+    <!-- A Container is created to hold the ingredientsFragment -->
+    <FrameLayout
+        android:id="@+id/ingredients"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerInside"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Steps title"
+            android:paddingBottom="16dp" />
+
+        <!-- A Container is created to hold the stepsFragment -->
+        <FrameLayout
+            android:id="@+id/steps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"/>
+
+    </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/darker_gray" />
+
+    <LinearLayout
+        android:id="@+id/right_linear_layout"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
+
+
+            <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+                android:id="@+id/playerView"
+                android:layout_width="wrap_content"
+                android:layout_height="256dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="0dp"
+                android:layout_marginRight="0dp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginBottom="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/horizontalHalf"
+                android:layout_marginLeft="0dp"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <android.support.constraint.Guideline
+                android:id="@+id/horizontalHalf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.5"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="256dp" />
+
+            <TextView
+                android:id="@+id/stepDetailShort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                app:layout_constraintTop_toBottomOf="@+id/horizontalHalf"
+                app:layout_constraintBottom_toTopOf="@+id/stepDetailDescription"
+                />
+
+            <TextView
+                android:id="@+id/stepDetailDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                app:layout_constraintTop_toBottomOf="@+id/stepDetailShort"/>
+
+
+
+    </LinearLayout>
+
+    </LinearLayout>
+
