@@ -1,19 +1,76 @@
 package com.example.android.baking;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
+
+import com.example.android.baking.Model.Steps;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
+
+import butterknife.ButterKnife;
+
 public class RecipeDetailActivity extends AppCompatActivity {
+
+    private boolean mTwoPane;
+    public static final String EXTRA_POSITION = "extra_position";
+    public static final String STEP_DETAILS = "step_details";
+    private static final int DEFAULT_POSITION = -1;
+    private ArrayList<Steps> stepData = new ArrayList<>();
+    int position;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
+
+
+        if(findViewById(R.id.left_linear_layout) != null) {
+
+            mTwoPane = true;
+
+            if(savedInstanceState == null) {
+
+                Intent intent = getIntent();
+                if (intent == null) {
+                    closeOnError();
+                }
+
+                position = intent.getIntExtra(EXTRA_POSITION, DEFAULT_POSITION);
+                if (position == DEFAULT_POSITION) {
+                    // EXTRA_POSITION not found in intent
+                    closeOnError();
+                    return;
+                }
+
+                stepData = getIntent().getExtras().getParcelableArrayList(STEP_DETAILS);
+
+                StepDetailFragment detailFragment = new StepDetailFragment();
+
+                detailFragment.setSteps(stepData);
+                detailFragment.setPosition(position);
+
+
+                //Use a FragmentManager and transaction to add the fragment to the screen
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                //Fragment transaction
+                fragmentManager.beginTransaction()
+                        .add(R.id.detail, detailFragment)
+                        .commit();
+
+            }
+
+        } else {
+
+            mTwoPane = false;
+        }
 
         //Create a ingredientsfragment instance and display it using FragmentManager
         IngredientsFragment ingredFragment = new IngredientsFragment();
@@ -27,10 +84,19 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 .add(R.id.steps, stepsFragment)
                 .commit();
 
-        Log.i("tag", "recipe detail activity");
-
 
     }
+
+    private void closeOnError() {
+
+        finish();
+        Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
+    }
+
+    public Boolean getTwoPane() {
+        return mTwoPane;
+    }
+
 
 
 }

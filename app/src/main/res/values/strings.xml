@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Baking</string>
+    <string name="detail_error_message">Error getting intent</string>
+
 </resources>

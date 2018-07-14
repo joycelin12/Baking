@@ -1,14 +1,20 @@
 package com.example.android.baking;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.android.baking.Model.Steps;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -28,10 +34,14 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static android.content.Intent.getIntent;
 
 /**
  * Created by joycelin12 on 7/12/18.
@@ -42,9 +52,38 @@ public class StepDetailFragment extends Fragment {
     @BindView(R.id.stepDetailShort) TextView detailShortTextView;
     @BindView(R.id.stepDetailDescription) TextView detailDescriptionTextView;
     @BindView(R.id.playerView) SimpleExoPlayerView mPlayerView;
+    @BindView(R.id.prev) Button prev;
+    @BindView(R.id.next) Button next;
+
     private Unbinder unbinder;
     private SimpleExoPlayer mExoPlayer;
+    private int mPosition;
+    private ArrayList<Steps> mSteps= new ArrayList<>();
+    public static final String EXTRA_POSITION = "extra_position";
+    public static final String STEP_DETAILS = "step_details";
 
+    // Define a new interface OnBClickListener that triggers a callback in the host activity
+    OnBClickListener mCallback;
+
+    // OnBClickListener interface, calls a method in the host activity named onButtonSelected
+    public interface OnBClickListener {
+        void onButtonSelected(int position);
+    }
+
+    // Override onAttach to make sure that the container activity has implemented the callback
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the host activity has implemented the callback interface
+        // If not, it throws an exception
+        try {
+            mCallback = (OnBClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnButtonClickListener");
+        }
+    }
 
 
     //Mandatory constructor for instantiating the fragment
@@ -56,17 +95,38 @@ public class StepDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        // Load the saved state (the list of images and list index) if there is one
+        if(savedInstanceState != null) {
+            mSteps = savedInstanceState.getParcelableArrayList(STEP_DETAILS);
+            mPosition = savedInstanceState.getInt(EXTRA_POSITION);
+
+        }
+
+
         View rootView = inflater.inflate(R.layout.fragment_steps_detail, container, false);
         unbinder = ButterKnife.bind(this, rootView);
 
-
-        //Initialize the player
-        Uri uri = null;
-        uri = Uri.parse("https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffdb1d_2-form-crust-to-bottom-of-pan-cheesecake/2-form-crust-to-bottom-of-pan-cheesecake.mp4");
+        Uri uri = Uri.parse(mSteps.get(mPosition).getVideoURL());
         initializePlayer(uri);
 
-        detailShortTextView.setText("short");
-        detailDescriptionTextView.setText("description");
+        detailShortTextView.setText(mSteps.get(mPosition).getShortDescription());
+        detailDescriptionTextView.setText(mSteps.get(mPosition).getDescription());
+
+        prev.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                mCallback.onButtonSelected(mPosition-1);
+            }
+
+        });
+
+        next.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                mCallback.onButtonSelected(mPosition+1);
+            }
+
+        });
 
         return rootView;
     }
@@ -86,7 +146,7 @@ public class StepDetailFragment extends Fragment {
             mPlayerView.setPlayer(mExoPlayer);
 
             //Prepare the MediaSource
-            String userAgent = Util.getUserAgent(getContext(), "Baking");
+            String userAgent = Util.getUserAgent(getContext(), getString(R.string.app_name));
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
             mExoPlayer.prepare(mediaSource);
@@ -106,4 +166,23 @@ public class StepDetailFragment extends Fragment {
         super.onDestroy();
         releasePlayer();
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList(STEP_DETAILS, mSteps);
+        outState.putInt(EXTRA_POSITION, mPosition );
+
+        super.onSaveInstanceState(outState);
+    }
+
+    public void setSteps(ArrayList<Steps> steps) {
+        mSteps = steps;
+    }
+
+    public void setPosition(int position) {
+        mPosition = position;
+    }
+
+
+
 }
