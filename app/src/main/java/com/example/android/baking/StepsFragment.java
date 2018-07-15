@@ -57,13 +57,13 @@ public class StepsFragment extends Fragment implements StepsAdapter.ItemClickLis
         //set layoutManager
         recipeStepsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
+        /*
                 stepsData.add(new Steps("0", "Recipe Introduction", "Recipe Introduction", "https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffdae8_-intro-cheesecake/-intro-cheesecake.mp4", ""));
                 stepsData.add(new Steps("1","Starting prep.","1. Preheat the oven to 350\u00b0F. Grease the bottom of a 9-inch round springform pan with butter. ", "",  ""));
                 stepsData.add(new Steps("2", "Prep the cookie crust.",
                 "2. To assemble the crust, whisk together the cookie crumbs, 50 grams (1/4 cup) of sugar, and 1/2 teaspoon of salt for the crust in a medium bowl. Stir in the melted butter and 1 teaspoon of vanilla extract until uniform. ",
                 "https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffdb1d_2-form-crust-to-bottom-of-pan-cheesecake/2-form-crust-to-bottom-of-pan-cheesecake.mp4",
-                "thumbnailURL"));
+                "thumbnailURL"));*/
         StepsAdapter sAdapter = new StepsAdapter(stepsData.size(), stepsData, this.getContext());
         sAdapter.setClickListener(this);
         recipeStepsRecyclerView.setAdapter(sAdapter);
@@ -109,5 +109,9 @@ public class StepsFragment extends Fragment implements StepsAdapter.ItemClickLis
     @Override public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    public void setSteps(ArrayList<Steps> stepsData) {
+        this.stepsData = stepsData  ;
     }
 }
