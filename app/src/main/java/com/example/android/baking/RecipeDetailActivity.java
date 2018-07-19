@@ -1,25 +1,21 @@
 package com.example.android.baking;
 
-import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
+import com.example.android.baking.Model.Ingredients;
 import com.example.android.baking.Model.Recipe;
 import com.example.android.baking.Model.Steps;
 
-import org.json.JSONException;
-
 import java.util.ArrayList;
 
-import butterknife.ButterKnife;
+import static com.example.android.baking.Utilities.RecipeJsonUtils.createIngredients;
 
-import static com.example.android.baking.Utilities.RecipeJsonUtils.getStepsFromJson;
 
 public class RecipeDetailActivity extends AppCompatActivity {
 
@@ -30,6 +26,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private static final int DEFAULT_POSITION = -1;
     private ArrayList<Steps> stepData = new ArrayList<>();
     private ArrayList<Steps> stepsData = new ArrayList<>();
+    private ArrayList<Ingredients> ingredData = new ArrayList<>();
 
     private Recipe recipe;
     int position;
@@ -42,12 +39,18 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         final Recipe recipe = (Recipe) getIntent().getParcelableExtra(RECIPE_DETAILS);
 
-        try {
-            stepsData = getStepsFromJson(this, recipe.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        setTitle(recipe.getName());
 
+        stepsData = recipe.getSteps();
+        ingredData = recipe.getIngredients();
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("name",recipe.getName());
+        editor.putString("ingredients",createIngredients(ingredData));
+        editor.apply();
+
+        //tablet mode
         if(findViewById(R.id.left_linear_layout) != null) {
 
             mTwoPane = true;
@@ -68,11 +71,12 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
                 stepData = getIntent().getExtras().getParcelableArrayList(STEP_DETAILS);
 
+
                 StepDetailFragment detailFragment = new StepDetailFragment();
 
                 detailFragment.setSteps(stepData);
                 detailFragment.setPosition(position);
-
+                detailFragment.setName(recipe.getName());
 
                 //Use a FragmentManager and transaction to add the fragment to the screen
                 FragmentManager fragmentManager = getSupportFragmentManager();
@@ -88,22 +92,26 @@ public class RecipeDetailActivity extends AppCompatActivity {
             mTwoPane = false;
         }
 
-        //Create a ingredientsfragment instance and display it using FragmentManager
-        IngredientsFragment ingredFragment = new IngredientsFragment();
-        //Create the stepsfragment instance and display it using FragmentManager
-        StepsFragment stepsFragment = new StepsFragment();
+        if(savedInstanceState == null) {
 
-        stepsFragment.setSteps(stepsData);
+            //Create a ingredientsfragment instance and display it using FragmentManager
+            IngredientsFragment ingredFragment = new IngredientsFragment();
+            //Create the stepsfragment instance and display it using FragmentManager
+            StepsFragment stepsFragment = new StepsFragment();
 
-        //Use a FragmentManager and transaction to add the fragment to the screen
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        //Fragment transaction
-        fragmentManager.beginTransaction()
-                .add(R.id.ingredients, ingredFragment)
-                .add(R.id.steps, stepsFragment)
-                .commit();
+            stepsFragment.setSteps(stepsData);
+            stepsFragment.setName(recipe.getName());
+            ingredFragment.setIngredients(ingredData);
 
+            //Use a FragmentManager and transaction to add the fragment to the screen
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            //Fragment transaction
+            fragmentManager.beginTransaction()
+                    .add(R.id.ingredients, ingredFragment)
+                    .add(R.id.steps, stepsFragment)
+                    .commit();
 
+        }
     }
 
     private void closeOnError() {
@@ -116,6 +124,12 @@ public class RecipeDetailActivity extends AppCompatActivity {
         return mTwoPane;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("recipe", recipe);
+
+    }
 
 
 }

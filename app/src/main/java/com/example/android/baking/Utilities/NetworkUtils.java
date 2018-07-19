@@ -1,5 +1,8 @@
 package com.example.android.baking.Utilities;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 
 import java.io.IOException;
@@ -53,5 +56,7 @@ public class NetworkUtils {
 
         return response.body().string();
     }
+
+
 
 }

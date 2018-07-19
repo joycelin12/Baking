@@ -5,16 +5,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/stepsImage"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
+        android:paddingTop="@dimen/padding"
+        android:paddingBottom="@dimen/padding"
+        android:paddingLeft="@dimen/padding"
+        android:paddingRight="@dimen/padding"
         android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         tools:src="@drawable/user_placeholder"/>
@@ -23,10 +23,11 @@
         android:id="@+id/stepsShort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
+        android:paddingTop="@dimen/padding"
+        android:paddingBottom="@dimen/padding"
+        android:paddingLeft="@dimen/padding"
+        android:paddingRight="@dimen/padding"
+        android:textStyle="bold"
         app:layout_constraintLeft_toRightOf="@+id/stepsImage"
         app:layout_constraintBottom_toTopOf="@+id/stepsDescription"
         />
@@ -35,10 +36,10 @@
         android:id="@+id/stepsDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
+        android:paddingTop="@dimen/padding"
+        android:paddingBottom="@dimen/padding"
+        android:paddingLeft="@dimen/padding"
+        android:paddingRight="@dimen/padding"
         app:layout_constraintLeft_toRightOf="@+id/stepsImage"
         app:layout_constraintTop_toBottomOf="@+id/stepsShort"
 

@@ -3,7 +3,6 @@ package com.example.android.baking;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.example.android.baking.Model.Recipe;
 import com.example.android.baking.Utilities.NetworkUtils;
@@ -28,7 +27,6 @@ public class RecipeTask extends AsyncTask<String, Void, ArrayList<Recipe>> {
     private RecipeAdapter.ItemClickListener mClickListener;
     public  RecipeResponse recipes = null;
     private String JSONString;
-    private static final int NUM_LIST_ITEMS = 20;
 
 
     public RecipeTask(Context context, RecipeAdapter.ItemClickListener itemClickListener, RecyclerView recipesList,
@@ -49,8 +47,6 @@ public class RecipeTask extends AsyncTask<String, Void, ArrayList<Recipe>> {
 
             NetworkUtils test = new NetworkUtils();
             JSONString = test.run(recipeUrl.toString());
-            Log.i("TAG", JSONString);
-
 
             ArrayList<Recipe> simpleRecipeData  = getRecipeFromJson(this.context, JSONString);
             recipes.processFinish(simpleRecipeData);
@@ -71,7 +67,7 @@ public class RecipeTask extends AsyncTask<String, Void, ArrayList<Recipe>> {
     @Override
     protected void onPostExecute(ArrayList<Recipe> recipeData) {
 
-        rAdapter = new RecipeAdapter(NUM_LIST_ITEMS, recipeData, this.context);
+        rAdapter = new RecipeAdapter(recipeData.size(), recipeData, this.context);
         rAdapter.setClickListener(this.mClickListener);
         this.recipesList.setAdapter(rAdapter);
 

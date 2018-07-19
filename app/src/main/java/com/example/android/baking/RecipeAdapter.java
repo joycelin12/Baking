@@ -30,6 +30,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.NumberView
 
     //create a constructor that accepts int as a parameter for number of items and store in the variable
     public RecipeAdapter(int numberOfItems, ArrayList<Recipe> data, Context context){
+
         mNumberItems = numberOfItems;
         this.mData = data;
         this.mContext = context;
@@ -52,9 +53,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.NumberView
     @Override
     public void onBindViewHolder(RecipeAdapter.NumberViewHolder holder, int position) {
 
-        String name = mData.get(position).getName();
-        //String name = "testing";
-        holder.listName.setText(name);
+            String name = mData.get((holder.getAdapterPosition())).getName();
+            //String name = "testing";
+            holder.listName.setText(name);
 
     }
 

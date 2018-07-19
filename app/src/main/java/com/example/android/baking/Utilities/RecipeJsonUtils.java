@@ -1,17 +1,14 @@
 package com.example.android.baking.Utilities;
 
 import android.content.Context;
-import android.util.Log;
 
+import com.example.android.baking.Model.Ingredients;
 import com.example.android.baking.Model.Recipe;
-import com.example.android.baking.Model.Steps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -36,24 +33,24 @@ public class RecipeJsonUtils {
         ArrayList<Recipe> parsedRecipeData = gson.fromJson(RecipeJsonStr, new TypeToken<ArrayList<Recipe>>() {
         }.getType());
 
-        Log.i("TAG", parsedRecipeData.get(0).toString() );
 
         return parsedRecipeData;
     }
 
-    public static ArrayList<Steps> getStepsFromJson(Context context, String StepsJsonStr)
-            throws JSONException {
+    public static String createIngredients(ArrayList<Ingredients> ingredData) {
 
-        JSONObject stepsJson = new JSONObject(StepsJsonStr);
-        JSONArray stepsArray = stepsJson.getJSONArray(M_STEPS);
+        String ingredlist="";
 
-        Gson gson = new GsonBuilder().create();
+        for (Ingredients in: ingredData) {
 
-        ArrayList<Steps> parsedStepData = gson.fromJson(stepsArray.toString(), new TypeToken<ArrayList<Steps>>() {
-        }.getType());
+            ingredlist = ingredlist + in.getQuantity() + " " + in.getMeasure() + " " + in.getIngredient() + "\n";
+        }
 
-        return parsedStepData;
+        return ingredlist;
+
     }
+
+
 
 
 }

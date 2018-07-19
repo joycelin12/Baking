@@ -1,40 +1,36 @@
 package com.example.android.baking;
 
 import android.content.Intent;
-import android.graphics.Movie;
-import android.support.annotation.Nullable;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
+import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.android.baking.Model.Steps;
+import com.example.android.baking.Utilities.NetworkUtils;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Optional;
-
-import static android.content.Intent.getIntent;
 
 public class StepDetailActivity extends AppCompatActivity implements StepDetailFragment.OnBClickListener {
 
     public static final String EXTRA_POSITION = "extra_position";
     public static final String STEP_DETAILS = "step_details";
     private static final int DEFAULT_POSITION = -1;
+    public static final String NAME = "recipe_name";
     private ArrayList<Steps> stepData = new ArrayList<>();
     int position;
-
+    String mName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_detail);
+
 
         if(savedInstanceState == null) {
 
@@ -49,6 +45,9 @@ public class StepDetailActivity extends AppCompatActivity implements StepDetailF
                 closeOnError();
                 return;
             }
+
+            mName = intent.getStringExtra(NAME);
+            setTitle(mName);
 
             stepData = getIntent().getExtras().getParcelableArrayList(STEP_DETAILS);
 
@@ -82,11 +81,11 @@ public class StepDetailActivity extends AppCompatActivity implements StepDetailF
 
         if (position == stepData.size()){
 
-            Toast.makeText(getApplicationContext(), "This is the last step of the recipe", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.last_step, Toast.LENGTH_SHORT).show();
 
         } else if (position == -1) {
 
-            Toast.makeText(getApplicationContext(), "This is the first step of the recipe", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.first_step, Toast.LENGTH_SHORT).show();
 
         } else {
 
@@ -104,4 +103,14 @@ public class StepDetailActivity extends AppCompatActivity implements StepDetailF
                     .commit();
         }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList(STEP_DETAILS, stepData);
+        outState.putInt(EXTRA_POSITION, position);
+
+        super.onSaveInstanceState(outState);
+    }
+
+
 }

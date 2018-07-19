@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">Baking</string>
     <string name="detail_error_message">Error getting intent</string>
+    <string name="recipe">Recipes</string>
+    <string name="noic">There is no internet connection.</string>
+    <string name="last_step">This is the last step of the recipe</string>
+    <string name="first_step">This is the first step of the recipe</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>
