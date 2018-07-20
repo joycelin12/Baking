@@ -2,6 +2,7 @@ package com.example.android.baking;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,7 +90,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.NumberViewHo
 
         Steps steps = mData.get(position);
         Context context = holder.listItemStepsImageView.getContext();
-        if (!steps.getThumbnailURL().isEmpty())  {
+        if (!TextUtils.isEmpty(steps.getThumbnailURL()))  {
             holder.listItemStepsImageView.setVisibility(View.VISIBLE);
             Picasso.with(context)
                     .load(steps.getThumbnailURL())

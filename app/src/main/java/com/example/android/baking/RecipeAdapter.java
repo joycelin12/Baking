@@ -2,12 +2,15 @@ package com.example.android.baking;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.baking.Model.Recipe;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
@@ -56,6 +59,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.NumberView
             String name = mData.get((holder.getAdapterPosition())).getName();
             //String name = "testing";
             holder.listName.setText(name);
+            if (!TextUtils.isEmpty(mData.get((holder.getAdapterPosition())).getImage()))  {
+            holder.listItemRecipeImageView.setVisibility(View.VISIBLE);
+            Picasso.with(mContext)
+                    .load(mData.get((holder.getAdapterPosition())).getImage())
+                    .placeholder(R.drawable.user_placeholder)
+                    .error(R.drawable.user_placeholder_error)
+                    .into(holder.listItemRecipeImageView);
+        }
 
     }
 
@@ -67,6 +78,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.NumberView
     public class NumberViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.recipe_name)
         TextView listName;
+        @BindView(R.id.recipe_image)
+        ImageView listItemRecipeImageView;
 
 
         public NumberViewHolder(View view) {

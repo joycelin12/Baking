@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
+import android.support.design.widget.Snackbar;
 import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -60,8 +61,14 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Ite
             if (isOnline()) {
                 loadRecipeData();
             } else  {
+
+                //referencing https://www.androidhive.info/2015/09/android-material-design-snackbar-example/
                 String message = getString(R.string.noic);
-                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+                Snackbar snackbar = Snackbar
+                        .make(recipeMainRecyclerView, message, Snackbar.LENGTH_LONG);
+
+                snackbar.show();
+                //Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             }
         }
 

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -51,6 +52,12 @@ public class StepDetailActivity extends AppCompatActivity implements StepDetailF
 
             stepData = getIntent().getExtras().getParcelableArrayList(STEP_DETAILS);
 
+        } else {
+            stepData = savedInstanceState.getParcelableArrayList(STEP_DETAILS);
+            position = savedInstanceState.getInt(EXTRA_POSITION);
+
+        }
+
             StepDetailFragment detailFragment = new StepDetailFragment();
 
             detailFragment.setSteps(stepData);
@@ -64,7 +71,7 @@ public class StepDetailActivity extends AppCompatActivity implements StepDetailF
                     .add(R.id.detail, detailFragment)
                     .commit();
 
-        }
+
 
     }
 
@@ -78,29 +85,34 @@ public class StepDetailActivity extends AppCompatActivity implements StepDetailF
     @Override
     public void onButtonSelected(int position) {
 
+        if(stepData != null ) {
 
-        if (position == stepData.size()){
+            Log.i("TAG", stepData.size() + " is size " + position + " is position 2");
 
-            Toast.makeText(getApplicationContext(), R.string.last_step, Toast.LENGTH_SHORT).show();
+            if (position == stepData.size()) {
 
-        } else if (position == -1) {
+                Toast.makeText(getApplicationContext(), R.string.last_step, Toast.LENGTH_SHORT).show();
 
-            Toast.makeText(getApplicationContext(), R.string.first_step, Toast.LENGTH_SHORT).show();
+            } else if (position == -1) {
 
-        } else {
+                Toast.makeText(getApplicationContext(), R.string.first_step, Toast.LENGTH_SHORT).show();
 
-            StepDetailFragment detailFragment = new StepDetailFragment();
+            } else {
 
-            detailFragment.setSteps(stepData);
-            detailFragment.setPosition(position);
+                StepDetailFragment detailFragment = new StepDetailFragment();
+
+                detailFragment.setSteps(stepData);
+                detailFragment.setPosition(position);
 
 
-            //Use a FragmentManager and transaction to add the fragment to the screen
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            //Fragment transaction
-            fragmentManager.beginTransaction()
-                    .replace(R.id.detail, detailFragment)
-                    .commit();
+                //Use a FragmentManager and transaction to add the fragment to the screen
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                //Fragment transaction
+                fragmentManager.beginTransaction()
+                        .replace(R.id.detail, detailFragment)
+                        .commit();
+            }
+
         }
     }
 
@@ -108,7 +120,6 @@ public class StepDetailActivity extends AppCompatActivity implements StepDetailF
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArrayList(STEP_DETAILS, stepData);
         outState.putInt(EXTRA_POSITION, position);
-
         super.onSaveInstanceState(outState);
     }
 

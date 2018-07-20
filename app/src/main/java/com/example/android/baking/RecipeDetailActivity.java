@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.android.baking.Model.Ingredients;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import static com.example.android.baking.Utilities.RecipeJsonUtils.createIngredients;
 
 
-public class RecipeDetailActivity extends AppCompatActivity {
+public class RecipeDetailActivity extends AppCompatActivity implements StepDetailFragment.OnBClickListener{
 
     public static final String RECIPE_DETAILS = "recipe_details";
     private boolean mTwoPane;
@@ -51,7 +52,9 @@ public class RecipeDetailActivity extends AppCompatActivity {
         editor.apply();
 
         //tablet mode
-        if(findViewById(R.id.left_linear_layout) != null) {
+        //referencing https://stackoverflow.com/questions/9279111/determine-if-the-device-is-a-smartphone-or-tablet
+        boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
+        if(tabletSize) {
 
             mTwoPane = true;
 
@@ -70,9 +73,13 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 }
 
                 stepData = getIntent().getExtras().getParcelableArrayList(STEP_DETAILS);
+                }
+                else {
+                    stepData = savedInstanceState.getParcelableArrayList(STEP_DETAILS);
+                    position = savedInstanceState.getInt(EXTRA_POSITION);
+                }
 
-
-                StepDetailFragment detailFragment = new StepDetailFragment();
+              /*  StepDetailFragment detailFragment = new StepDetailFragment();
 
                 detailFragment.setSteps(stepData);
                 detailFragment.setPosition(position);
@@ -83,9 +90,10 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 //Fragment transaction
                 fragmentManager.beginTransaction()
                         .add(R.id.detail, detailFragment)
-                        .commit();
+                        .commit(); */
 
-            }
+
+
 
         } else {
 
@@ -126,9 +134,46 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putParcelable("recipe", recipe);
+        outState.putParcelableArrayList(STEP_DETAILS, stepsData);
+        outState.putInt(EXTRA_POSITION, position);
+        super.onSaveInstanceState(outState);
 
+
+
+    }
+
+    @Override
+    public void onButtonSelected(int position) {
+
+        if(stepsData != null ) {
+
+            Log.i("TAG", stepsData.size() + " is size " + position + " is position ");
+
+
+            if (position == stepsData.size()) {
+
+                Toast.makeText(getApplicationContext(), R.string.last_step, Toast.LENGTH_SHORT).show();
+
+            } else if (position == -1) {
+
+                Toast.makeText(getApplicationContext(), R.string.first_step, Toast.LENGTH_SHORT).show();
+
+            } else {
+
+                StepDetailFragment detailFragment = new StepDetailFragment();
+
+                detailFragment.setSteps(stepsData);
+                detailFragment.setPosition(position);
+
+                //Use a FragmentManager and transaction to add the fragment to the screen
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                //Fragment transaction
+                fragmentManager.beginTransaction()
+                        .replace(R.id.detail, detailFragment)
+                        .commit();
+            }
+        }
     }
 
 
