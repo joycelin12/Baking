@@ -54,10 +54,12 @@ public class StepDetailFragment extends Fragment {
     public static final String EXTRA_POSITION = "extra_position";
     public static final String STEP_DETAILS = "step_details";
     public static final String PLAYER_POSITION = "player_position";
+    public static final String PLAYER_READY = "player_READY";
 
     // Define a new interface OnBClickListener that triggers a callback in the host activity
     OnBClickListener mCallback;
     private long mLastPosition;
+    private boolean mReady = true;
 
 
     // OnBClickListener interface, calls a method in the host activity named onButtonSelected
@@ -100,11 +102,12 @@ public class StepDetailFragment extends Fragment {
             mSteps = savedInstanceState.getParcelableArrayList(STEP_DETAILS);
             mPosition = savedInstanceState.getInt(EXTRA_POSITION);
             mLastPosition = savedInstanceState.getLong(PLAYER_POSITION);
+            mReady = savedInstanceState.getBoolean(PLAYER_READY);
+
         }
 
             if (mSteps != null) {
 
-                Log.i("TAG", mPosition + "is position " + mSteps.size() + " ");
 
                 Uri uri = Uri.parse(mSteps.get(mPosition).getVideoURL());
                 initializePlayer(uri);
@@ -160,7 +163,8 @@ public class StepDetailFragment extends Fragment {
             if (mLastPosition != C.TIME_UNSET) {
                 mExoPlayer.seekTo(mLastPosition);
             }
-            mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.setPlayWhenReady(mReady);
+
 
         }
 
@@ -185,6 +189,8 @@ public class StepDetailFragment extends Fragment {
         outState.putParcelableArrayList(STEP_DETAILS, mSteps);
         outState.putInt(EXTRA_POSITION, mPosition);
         outState.putLong(PLAYER_POSITION, mLastPosition);
+        outState.putBoolean(PLAYER_READY, mReady);
+
         super.onSaveInstanceState(outState);
     }
 
@@ -202,6 +208,7 @@ public class StepDetailFragment extends Fragment {
         super.onPause();
         if (mExoPlayer != null) {
             mLastPosition = mExoPlayer.getCurrentPosition();
+            mReady = mExoPlayer.getPlayWhenReady();
         }
         if (Util.SDK_INT <= 23) {
             releasePlayer();
@@ -213,9 +220,19 @@ public class StepDetailFragment extends Fragment {
         super.onStop();
         if (mExoPlayer != null) {
             mLastPosition = mExoPlayer.getCurrentPosition();
+            mReady = mExoPlayer.getPlayWhenReady();
         }
         if (Util.SDK_INT > 23) {
             releasePlayer();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(mExoPlayer != null) {
+            mExoPlayer.seekTo(mLastPosition);
+            mExoPlayer.setPlayWhenReady(mReady);
         }
     }
 }

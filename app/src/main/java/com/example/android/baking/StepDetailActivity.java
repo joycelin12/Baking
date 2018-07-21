@@ -23,17 +23,18 @@ public class StepDetailActivity extends AppCompatActivity implements StepDetailF
     public static final String STEP_DETAILS = "step_details";
     private static final int DEFAULT_POSITION = -1;
     public static final String NAME = "recipe_name";
+    private static final String FRAGMENT_TAG_STRING = "fragment_tag" ;
     private ArrayList<Steps> stepData = new ArrayList<>();
     int position;
     String mName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_detail);
 
-
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
 
             Intent intent = getIntent();
             if (intent == null) {
@@ -52,25 +53,37 @@ public class StepDetailActivity extends AppCompatActivity implements StepDetailF
 
             stepData = getIntent().getExtras().getParcelableArrayList(STEP_DETAILS);
 
-        } else {
-            stepData = savedInstanceState.getParcelableArrayList(STEP_DETAILS);
-            position = savedInstanceState.getInt(EXTRA_POSITION);
-
-        }
-
             StepDetailFragment detailFragment = new StepDetailFragment();
 
             detailFragment.setSteps(stepData);
             detailFragment.setPosition(position);
 
+            //Use a FragmentManager and transaction to add the fragment to the screen
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            //Fragment transaction
+            fragmentManager.beginTransaction()
+                    .add(R.id.detail, detailFragment, "detail")
+                    .commit();
+
+
+        } else {
+            stepData = savedInstanceState.getParcelableArrayList(STEP_DETAILS);
+            position = savedInstanceState.getInt(EXTRA_POSITION);
+
+            StepDetailFragment detailFragment = (StepDetailFragment) getSupportFragmentManager().findFragmentById(R.id.detail);
+
+            detailFragment.setSteps(stepData);
+            detailFragment.setPosition(position);
 
             //Use a FragmentManager and transaction to add the fragment to the screen
             FragmentManager fragmentManager = getSupportFragmentManager();
             //Fragment transaction
             fragmentManager.beginTransaction()
-                    .add(R.id.detail, detailFragment)
+                    .replace(R.id.detail, detailFragment)
                     .commit();
 
+
+        }
 
 
     }
@@ -87,7 +100,6 @@ public class StepDetailActivity extends AppCompatActivity implements StepDetailF
 
         if(stepData != null ) {
 
-            Log.i("TAG", stepData.size() + " is size " + position + " is position 2");
 
             if (position == stepData.size()) {
 

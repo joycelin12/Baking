@@ -79,21 +79,6 @@ public class RecipeDetailActivity extends AppCompatActivity implements StepDetai
                     position = savedInstanceState.getInt(EXTRA_POSITION);
                 }
 
-              /*  StepDetailFragment detailFragment = new StepDetailFragment();
-
-                detailFragment.setSteps(stepData);
-                detailFragment.setPosition(position);
-                detailFragment.setName(recipe.getName());
-
-                //Use a FragmentManager and transaction to add the fragment to the screen
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                //Fragment transaction
-                fragmentManager.beginTransaction()
-                        .add(R.id.detail, detailFragment)
-                        .commit(); */
-
-
-
 
         } else {
 
@@ -147,9 +132,6 @@ public class RecipeDetailActivity extends AppCompatActivity implements StepDetai
     public void onButtonSelected(int position) {
 
         if(stepsData != null ) {
-
-            Log.i("TAG", stepsData.size() + " is size " + position + " is position ");
-
 
             if (position == stepsData.size()) {
 
